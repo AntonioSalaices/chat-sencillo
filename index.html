@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+        <h1>WebSocket</h1>
+        <br>
+        <ul id="chat"></ul>
+            <form>
+            <textarea rows="8" cols="80" id="message"></textarea>
+            <br />
+            <button type="submit">Send</button>
+            </form>
+
+   <script>
+       const connection = new WebSocket('ws://localhost:4000');
+
+            connection.onopen = () => {
+            console.log('Conectado');
+            };
+
+            connection.onclose = () => {
+            console.error('Desconectado');
+            };
+
+            connection.onerror = error => {
+            console.error('Error al conectar', error);
+            };
+
+            connection.onmessage = event => {
+            console.log('Recibido', event.data);
+            let li = document.createElement('li');
+            li.innerText = event.data;
+            document.querySelector('#chat').append(li);
+            };
+
+            document.querySelector('form').addEventListener('submit', event => {
+            event.preventDefault();
+            let message = document.querySelector('#message').value;
+            connection.send(message);
+            document.querySelector('#message').value = '';
+            });
+    </script> 
+</body>
+</html>
